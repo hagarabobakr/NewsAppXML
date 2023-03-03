@@ -4,11 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.newsapi.API.Model.ApiManager
 import com.example.newsapi.API.Model.Source
 import com.example.newsapi.API.Model.SourceResponse
+import com.example.newsapi.API.ui.newsFragment.NewsFragment
+import com.example.newsapi.R
 import com.example.newsapi.databinding.FragmentCategoryBinding
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,24 +32,36 @@ class CategoryFragment:Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //loadNewsSources()
+        loadNewsSources()
+
+
+    }
+    fun changeNewsFragment(source:Source){
+        childFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container,NewsFragment())
     }
 
     private fun loadNewsSources() {
-        ApiManager.getApis().getSources("bf1fff6b9a8f4c40b3617f1f42309a25")
+        showLOdingLayout()
+        ApiManager.
+        getApis()
+            .getSources("bf1fff6b9a8f4c40b3617f1f42309a25")
             .enqueue(object : Callback<SourceResponse> {
                 override fun onResponse(
                     call: Call<SourceResponse>,
                     response: Response<SourceResponse>,
                 ) {
                     viewBinding.lodingIndicator.isVisible=false
+                    response.body()?.sources
+
                     if(response.isSuccessful){
-                    bindSourcesIntabLayout(response.body()?.sources)
+                   bindSourcesIntabLayout(response.body()?.sources)
                     }else{
                         val gson = Gson()
                         val errorResponse=
                             gson.fromJson(response.errorBody()?.string(),SourceResponse::class.java)
                         errorResponse.message
+                        showerrorLayou(errorResponse.message)
 
 
                     }
@@ -52,9 +69,49 @@ class CategoryFragment:Fragment(){
 
                 override fun onFailure(call: Call<SourceResponse>, t: Throwable) {
                     viewBinding.lodingIndicator.isVisible=false
+                    showerrorLayou(t.localizedMessage)
                 }
 
             })
     }
-    fun bindSourcesIntabLayout(sourceList:List<Source?>){}
+
+    private fun showLOdingLayout() {
+        viewBinding.lodingIndicator.isVisible=true
+        viewBinding.errorMessage.isVisible=false
+        viewBinding.trayAgin.isVisible=false
+    }
+
+    private fun showerrorLayou(message: String?) {
+        viewBinding.lodingIndicator.isVisible=true
+        viewBinding.errorLayout.isVisible=true
+        viewBinding.errorMessage.text=message
+
+    }
+
+    fun bindSourcesIntabLayout(sourceList:List<Source?>?){
+        sourceList?.forEach {
+            val tab = viewBinding.tabLayout.newTab()
+            tab.text=it?.name
+            tab.tag = it
+            viewBinding.tabLayout.addTab(tab)
+        }
+        viewBinding.tabLayout.addOnTabSelectedListener(
+            object :TabLayout.OnTabSelectedListener{
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    val source = tab?.tag as Source
+                    changeNewsFragment(source)
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+                }
+
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+                    TODO("Not yet implemented")
+                }
+
+            }
+        )
+    }
+
 }
