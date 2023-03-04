@@ -60,12 +60,12 @@ class CategoryFragment:Fragment(){
                             gson.fromJson(
                                 response.errorBody()?.string(),
                                 SourceResponse::class.java)
-                        showerrorLayou(errorResponse.message)
+                        showErrorLayou(errorResponse.message)
                     }
                 }
                 override fun onFailure(call: Call<SourceResponse>, t: Throwable) {
                     viewBinding.lodingIndicator.isVisible= false
-                    showerrorLayou(t.localizedMessage)
+                    showErrorLayou(t.localizedMessage)
                 }
 
             })
@@ -76,7 +76,7 @@ class CategoryFragment:Fragment(){
         viewBinding.trayAgin.isVisible=false
     }
 
-    private fun showerrorLayou(message: String?) {
+    private fun showErrorLayou(message: String?) {
         viewBinding.lodingIndicator.isVisible=false
         viewBinding.errorLayout.isVisible=true
         viewBinding.errorMessage.text=message
@@ -107,6 +107,7 @@ class CategoryFragment:Fragment(){
 
             }
         )
+        //viewBinding.tabLayout.getTabAt(0)?.select()
     }
 
 }
