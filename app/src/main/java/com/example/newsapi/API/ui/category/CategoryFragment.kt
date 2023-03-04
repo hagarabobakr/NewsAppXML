@@ -107,6 +107,7 @@ class CategoryFragment:Fragment(){
 
             }
         )
+
         //viewBinding.tabLayout.getTabAt(0)?.select()
     }
 
