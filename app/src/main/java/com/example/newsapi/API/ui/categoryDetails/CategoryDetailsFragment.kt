@@ -1,4 +1,4 @@
-package com.example.newsapi.API.ui.category
+package com.example.newsapi.API.ui.categoryDetails
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,21 +12,21 @@ import com.example.newsapi.API.Model.sourceResponse.Source
 import com.example.newsapi.API.Model.sourceResponse.SourceResponse
 import com.example.newsapi.API.ui.newsFragment.NewsFragment
 import com.example.newsapi.R
-import com.example.newsapi.databinding.FragmentCategoryBinding
+import com.example.newsapi.databinding.FragmentDetailsCategoryBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CategoryFragment:Fragment(){
-    lateinit var viewBinding:FragmentCategoryBinding
+class CategoryDetailsFragment:Fragment(){
+    lateinit var viewBinding:FragmentDetailsCategoryBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewBinding = FragmentCategoryBinding.inflate(inflater,container,false)
+        viewBinding = FragmentDetailsCategoryBinding.inflate(inflater,container,false)
         return viewBinding.root
     }
 
@@ -39,6 +39,7 @@ class CategoryFragment:Fragment(){
     fun changeNewsFragment(source: Source){
         childFragmentManager.beginTransaction()
             .replace(R.id.fragment_container,NewsFragment.getInstance(source))
+            .commit()
     }
 
     private fun loadNewsSources() {
@@ -102,13 +103,13 @@ class CategoryFragment:Fragment(){
                 }
 
                 override fun onTabReselected(tab: TabLayout.Tab?) {
-                    TODO("Not yet implemented")
+                    val source = tab?.tag as Source
+                    changeNewsFragment(source)
                 }
 
             }
         )
-
-        //viewBinding.tabLayout.getTabAt(0)?.select()
+        viewBinding.tabLayout.getTabAt(0)?.select()
     }
 
 }
