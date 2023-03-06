@@ -36,7 +36,8 @@ class CategoryDetailsFragment:Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewBinding = FragmentDetailsCategoryBinding.inflate(inflater,container,false)
+        viewBinding = FragmentDetailsCategoryBinding
+            .inflate(inflater,container,false)
         return viewBinding.root
     }
 
