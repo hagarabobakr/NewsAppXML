@@ -39,7 +39,6 @@ CategoriesFragment.OnCategoryClickListener{
             .replace(R.id.fragment_container_main,categoriesFragment)
             .commit()
         categoriesFragment.onCategoryClickListener = this
-        ShowCategoriesFragment()
 
         val toggle = ActionBarDrawerToggle(this,
             viewBinding.root,

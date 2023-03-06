@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.newsapi.API.Model.ApiConstants
@@ -101,6 +102,12 @@ class CategoryDetailsFragment:Fragment(){
             tab.text=it?.name
             tab.tag = it
             viewBinding.tabLayout.addTab(tab)
+            val layoutParams = LinearLayout.LayoutParams(tab.view.layoutParams)
+            layoutParams.marginEnd = 15
+            layoutParams.marginStart = 15
+            layoutParams.bottomMargin = 8
+            layoutParams.topMargin = 8
+            tab.view.layoutParams = layoutParams
         }
         viewBinding.tabLayout.addOnTabSelectedListener(
             object :TabLayout.OnTabSelectedListener{

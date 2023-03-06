@@ -43,6 +43,10 @@
         android:layout_height="wrap_content"
         app:tabMode="scrollable"
         app:layout_constraintTop_toTopOf="parent"
+        app:tabBackground="@drawable/tab_selected"
+        app:tabIndicatorHeight="0dp"
+        app:tabTextColor="@color/green"
+        app:tabSelectedTextColor="@color/white"
         />
     <FrameLayout
         android:id="@+id/fragment_container"
