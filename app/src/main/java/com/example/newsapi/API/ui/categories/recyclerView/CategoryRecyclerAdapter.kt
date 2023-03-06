@@ -6,8 +6,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapi.databinding.ItemCategoryBinding
 
-class CategoryRecyclerAdapter(val items : List<Category>):RecyclerView.Adapter<CategoryRecyclerAdapter.viewHolder>() {
-    class viewHolder(val itemBinding:ItemCategoryBinding):RecyclerView.ViewHolder(itemBinding.root)
+class CategoryRecyclerAdapter(val items : List<Category>):RecyclerView
+.Adapter<CategoryRecyclerAdapter.viewHolder>() {
+    class viewHolder(val itemBinding:ItemCategoryBinding):RecyclerView
+    .ViewHolder(itemBinding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): viewHolder {
        val viewBinding = ItemCategoryBinding
@@ -19,15 +21,23 @@ class CategoryRecyclerAdapter(val items : List<Category>):RecyclerView.Adapter<C
         holder.itemBinding.container.setCardBackgroundColor(
             ContextCompat.getColor(
                 holder.itemView.context,
-                items[position].backgroundColorId,
-            ))
+                items[position].backgroundColorId
+            )
+        )
 
         holder.itemBinding.image.setImageResource(items[position].imageId)
+        onItemClickListner?.let {clickListner->
+            holder.itemBinding.container.setOnClickListener{
+                clickListner.onItemClick(position,items[position]) }
+        }
     }
 
     override fun getItemCount(): Int {
         return items.size
     }
-    //interface
+    var onItemClickListner: OnItemClickListner?=null
+    interface OnItemClickListner{
+        fun onItemClick(pos:Int, item: Category)
+    }
 
 }

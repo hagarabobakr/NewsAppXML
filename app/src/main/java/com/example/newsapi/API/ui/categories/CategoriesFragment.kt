@@ -29,6 +29,18 @@ class CategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding.categoryRecycler.adapter=categoryAdapter
+        categoryAdapter.onItemClickListner=object :CategoryRecyclerAdapter
+        .OnItemClickListner{
+            override fun onItemClick(pos: Int, item: Category) {
+                onCategoryClickListener?.onCategoryClick(item)
+            }
+
+        }
+    }
+    var onCategoryClickListener: OnCategoryClickListener? = null
+
+    interface OnCategoryClickListener {
+        fun onCategoryClick(category: Category)
     }
 
 

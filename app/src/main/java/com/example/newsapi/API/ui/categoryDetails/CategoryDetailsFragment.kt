@@ -10,6 +10,8 @@ import com.example.newsapi.API.Model.ApiConstants
 import com.example.newsapi.API.Model.ApiManager
 import com.example.newsapi.API.Model.sourceResponse.Source
 import com.example.newsapi.API.Model.sourceResponse.SourceResponse
+import com.example.newsapi.API.ui.categories.CategoriesFragment
+import com.example.newsapi.API.ui.categories.recyclerView.Category
 import com.example.newsapi.API.ui.newsFragment.NewsFragment
 import com.example.newsapi.R
 import com.example.newsapi.databinding.FragmentDetailsCategoryBinding
@@ -20,6 +22,14 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class CategoryDetailsFragment:Fragment(){
+    lateinit var category:Category
+    companion object {
+        fun getInstance(category: Category): CategoryDetailsFragment {
+            val fragment = CategoryDetailsFragment()
+            fragment.category = category
+            return fragment
+        }
+    }
     lateinit var viewBinding:FragmentDetailsCategoryBinding
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +56,7 @@ class CategoryDetailsFragment:Fragment(){
         showLOdingLayout()
         ApiManager.
         getApis()
-            .getSources(ApiConstants.apiKey)
+            .getSources(ApiConstants.apiKey,category.id)
             .enqueue(object : Callback<SourceResponse> {
                 override fun onResponse(
                     call: Call<SourceResponse>,

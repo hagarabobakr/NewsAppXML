@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".API.ui.categories.CategoriesFragment">
+    tools:context=".API.ui.categories.CategoriesFragment"
+    >
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -18,6 +19,7 @@
             android:textStyle="bold"
             android:textSize="22sp"
             android:textColor="@color/black"
+            android:padding="20dp"
             />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/category_recycler"
