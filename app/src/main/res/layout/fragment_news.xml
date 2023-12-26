@@ -31,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="dshakkfshfiesfhkahf"
+            android:fontFamily="@font/cairo"
             />
         <Button
             android:id="@+id/tray_agin"
@@ -44,6 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/item_news"
+        android:padding="10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         />
 

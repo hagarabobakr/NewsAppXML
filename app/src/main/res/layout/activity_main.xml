@@ -32,6 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="News App"
+                    android:fontFamily="@font/cairo"
                     android:textColor="@color/white" />
             </androidx.appcompat.widget.Toolbar>
 

@@ -17,8 +17,12 @@
             android:layout_height="wrap_content"
             android:text="Pick your category of interest"
             android:textStyle="bold"
-            android:textSize="22sp"
-            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textColor="@color/gray"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="8dp"
+            android:fontFamily="@font/cairo"
             />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/category_recycler"
@@ -26,6 +30,7 @@
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="2"
+            android:padding="5dp"
             tools:listitem="@layout/item_category"
             android:layout_margin="15dp"
             />

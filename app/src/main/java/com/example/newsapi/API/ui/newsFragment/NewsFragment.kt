@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapi.API.Model.ApiConstants
 import com.example.newsapi.API.Model.ApiManager
 import com.example.newsapi.API.Model.newsResponse.News
@@ -21,6 +22,8 @@ import retrofit2.Response
 
 class NewsFragment : Fragment() {
     lateinit var source: Source
+    var pageSize = 20
+    var page = 1
     companion object{
         fun getInstance(source: Source):NewsFragment{
             val newNewsFragment = NewsFragment()
@@ -37,13 +40,18 @@ class NewsFragment : Fragment() {
     }
     val newAdapter = NewsAdapter(null)
     private fun initRecyclerView() {
-        viewBinding.newsResycler.adapter=newAdapter
+        viewBinding.newsResycler.adapter = newAdapter
+        viewBinding.newsResycler.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+            }
+        })
     }
 
     private fun getNews() {
         showLOdingLayout()
         ApiManager.getApis()
-            .getNews(ApiConstants.apiKey,source.id?:" ")
+            .getNews(ApiConstants.apiKey,source.id?:" ", pageSize = pageSize, page = page)
             .enqueue(object :Callback<NewsResponse>{
                 override fun onResponse(
                     call: Call<NewsResponse>,

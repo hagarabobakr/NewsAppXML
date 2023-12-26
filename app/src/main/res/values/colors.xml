@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="green">#39A552</color>
+    <color name="darkGreen">#378048</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
@@ -13,5 +14,6 @@
     <color name="brown">#CF7E48</color>
     <color name="baby_blow">#4882CF</color>
     <color name="yellwo">#F2D352</color>
+    <color name="gray">#4F5A69</color>
 
 </resources>

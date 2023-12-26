@@ -23,97 +23,99 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CategoryDetailsFragment:Fragment(){
-    lateinit var category:Category
-    lateinit var viewModel: CategoryDetailsViewModel
-    companion object {
-        fun getInstance(category: Category): CategoryDetailsFragment {
-            val fragment = CategoryDetailsFragment()
-            fragment.category = category
-            return fragment
-        }
-    }
-    lateinit var viewBinding:FragmentDetailsCategoryBinding
+class CategoryDetailsFragment : Fragment() {
+    lateinit var viewBinding: FragmentDetailsCategoryBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        viewBinding = FragmentDetailsCategoryBinding
-            .inflate(inflater,container,false)
+    ): View {
+        viewBinding = FragmentDetailsCategoryBinding.inflate(
+            inflater, container, false
+        )
         return viewBinding.root
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(CategoryDetailsViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //loadNewsSources()
-        viewModel.loadNewsSources(category.id)
-        subscribeToLiveData()
-
-
+        loadNewsSources();
     }
 
-    private fun subscribeToLiveData() {
-        viewModel.sourceLivedata.observe(viewLifecycleOwner, {
-            bindSourcesIntabLayout(it)
-        })
-        viewModel.showLodingLayout.observe(viewLifecycleOwner, { show->
-            if (show)
-                showLOdingLayout()
-            else hideLodinglayout()
-
-        })
-        viewModel.showErrorLayout.observe(viewLifecycleOwner, {
-            showErrorLayou(it)
-        })
-    }
-
-    private fun hideLodinglayout() {
-
-        viewBinding.lodingIndicator.isVisible=false
-        viewBinding.trayAgin.isVisible=false
-    }
-
-    fun changeNewsFragment(source: Source){
-        childFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container,NewsFragment.getInstance(source))
+    fun changeNewsFragment(source: Source) {
+        childFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, NewsFragment.getInstance(source))
             .commit()
-    }
-
-
-
-    private fun showLOdingLayout() {
-        viewBinding.lodingIndicator.isVisible=true
-        viewBinding.trayAgin.isVisible=false
-    }
-
-    private fun showErrorLayou(message: String?) {
-        viewBinding.lodingIndicator.isVisible=false
-        viewBinding.errorLayout.isVisible=true
-        viewBinding.errorMessage.text=message
 
     }
 
-    fun bindSourcesIntabLayout(sourceList:List<Source?>?){
-        sourceList?.forEach {
+    private fun loadNewsSources() {
+        showLoadingLayout()
+        ApiManager
+            .getApis()
+            .getSources(ApiConstants.apiKey, category.id)
+            .enqueue(object : Callback<SourceResponse> {
+                override fun onResponse(
+                    call: Call<SourceResponse>,
+                    response: Response<SourceResponse>
+                ) {
+                    viewBinding.loadingIndicator.isVisible = false
+
+                    if (response.isSuccessful) {
+                        bindSourcesInTabLayout(response.body()?.sources)
+                    } else {
+                        val gson = Gson()
+                        val errorResponse =
+                            gson.fromJson(
+                                response.errorBody()?.string(),
+                                SourceResponse::class.java
+                            );
+                        showErrorLayout(errorResponse.message);
+                    }
+                }
+
+                override fun onFailure(call: Call<SourceResponse>, t: Throwable) {
+                    viewBinding.loadingIndicator.isVisible = false
+                    showErrorLayout(t.localizedMessage);
+                }
+            })
+    }
+
+    private fun showLoadingLayout() {
+        viewBinding.loadingIndicator.isVisible = true
+        viewBinding.errorLayout.isVisible = false
+    }
+
+    private fun showErrorLayout(message: String?) {
+        viewBinding.errorLayout.isVisible = true
+        viewBinding.loadingIndicator.isVisible = false;
+        viewBinding.errorMessage.text = message
+    }
+
+    fun bindSourcesInTabLayout(sourcesList: List<Source?>?) {
+        sourcesList?.forEach { source ->
             val tab = viewBinding.tabLayout.newTab()
-            tab.text=it?.name
-            tab.tag = it
+            tab.text = source?.name
+            tab.tag = source
             viewBinding.tabLayout.addTab(tab)
-            val layoutParams = LinearLayout.LayoutParams(tab.view.layoutParams)
-            layoutParams.marginEnd = 15
-            layoutParams.marginStart = 15
-            layoutParams.bottomMargin = 8
-            layoutParams.topMargin = 8
-            tab.view.layoutParams = layoutParams
+
+            (tab.view.layoutParams as LinearLayout.LayoutParams).marginStart = 12
+            (tab.view.layoutParams as LinearLayout.LayoutParams).marginEnd = 12
+            (tab.view.layoutParams as LinearLayout.LayoutParams).topMargin = 20
+            (tab.view.layoutParams as LinearLayout.LayoutParams).bottomMargin = 25
+//            val layoutParams = LinearLayout.LayoutParams(tab.view.layoutParams)
+//            layoutParams.marginEnd =12
+//            layoutParams.marginStart  = 12
+//            tab.view.layoutParams = layoutParams
+
         }
-        viewBinding.tabLayout.addOnTabSelectedListener(
-            object :TabLayout.OnTabSelectedListener{
+        viewBinding.tabLayout
+            .addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+                    val source = tab?.tag as Source
+                    changeNewsFragment(source)
+                }
+
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     val source = tab?.tag as Source
                     changeNewsFragment(source)
@@ -122,15 +124,17 @@ class CategoryDetailsFragment:Fragment(){
                 override fun onTabUnselected(tab: TabLayout.Tab?) {
 
                 }
-
-                override fun onTabReselected(tab: TabLayout.Tab?) {
-                    val source = tab?.tag as Source
-                    changeNewsFragment(source)
-                }
-
-            }
-        )
+            })
         viewBinding.tabLayout.getTabAt(0)?.select()
     }
 
+    lateinit var category: Category
+
+    companion object {
+        fun getInstance(category: Category): CategoryDetailsFragment {
+            val fragment = CategoryDetailsFragment()
+            fragment.category = category
+            return fragment
+        }
+    }
 }

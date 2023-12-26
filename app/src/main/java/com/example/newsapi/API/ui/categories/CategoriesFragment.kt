@@ -12,7 +12,7 @@ import com.example.newsapi.databinding.FragmentCategoriesBinding
 import com.example.newsapi.databinding.ItemCategoryBinding
 
 
-class CategoriesFragment : Fragment() {
+class  CategoriesFragment : Fragment() {
     lateinit var viewBinding: FragmentCategoriesBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +28,8 @@ class CategoriesFragment : Fragment() {
     val categoryAdapter = CategoryRecyclerAdapter(Category.getCategoryList())
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewBinding.categoryRecycler.adapter=categoryAdapter
-        categoryAdapter.onItemClickListner=object :CategoryRecyclerAdapter
+        viewBinding.categoryRecycler.adapter = categoryAdapter
+        categoryAdapter.onItemClickListner = object :CategoryRecyclerAdapter
         .OnItemClickListner{
             override fun onItemClick(pos: Int, item: Category) {
                 onCategoryClickListener?.onCategoryClick(item)
