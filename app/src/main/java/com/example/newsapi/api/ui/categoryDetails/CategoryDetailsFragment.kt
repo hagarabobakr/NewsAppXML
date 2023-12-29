@@ -1,4 +1,4 @@
-package com.example.newsapi.API.ui.categoryDetails
+package com.example.newsapi.api.ui.categoryDetails
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,23 +8,16 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.newsapi.API.Model.ApiConstants
-import com.example.newsapi.API.Model.ApiManager
-import com.example.newsapi.API.Model.sourceResponse.Source
-import com.example.newsapi.API.Model.sourceResponse.SourceResponse
-import com.example.newsapi.API.ui.categories.CategoriesFragment
-import com.example.newsapi.API.ui.categories.recyclerView.Category
-import com.example.newsapi.API.ui.newsFragment.NewsFragment
+import com.example.newsapi.api.model.sourceResponse.Source
+import com.example.newsapi.api.ui.categories.recyclerView.Category
+import com.example.newsapi.api.ui.newsFragment.NewsFragment
 import com.example.newsapi.R
 import com.example.newsapi.databinding.FragmentDetailsCategoryBinding
 import com.google.android.material.tabs.TabLayout
-import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class CategoryDetailsFragment : Fragment() {
     lateinit var viewBinding: FragmentDetailsCategoryBinding
+    lateinit var viewModel : CategoryDetailsViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,9 +29,15 @@ class CategoryDetailsFragment : Fragment() {
         return viewBinding.root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(CategoryDetailsViewModel::class.java)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadNewsSources();
+        viewModel.loadNewsSources(category.id)
+        subscribeToLiveData()
     }
 
     fun changeNewsFragment(source: Source) {
@@ -49,37 +48,7 @@ class CategoryDetailsFragment : Fragment() {
 
     }
 
-    private fun loadNewsSources() {
-        showLoadingLayout()
-        ApiManager
-            .getApis()
-            .getSources(ApiConstants.apiKey, category.id)
-            .enqueue(object : Callback<SourceResponse> {
-                override fun onResponse(
-                    call: Call<SourceResponse>,
-                    response: Response<SourceResponse>
-                ) {
-                    viewBinding.loadingIndicator.isVisible = false
 
-                    if (response.isSuccessful) {
-                        bindSourcesInTabLayout(response.body()?.sources)
-                    } else {
-                        val gson = Gson()
-                        val errorResponse =
-                            gson.fromJson(
-                                response.errorBody()?.string(),
-                                SourceResponse::class.java
-                            );
-                        showErrorLayout(errorResponse.message);
-                    }
-                }
-
-                override fun onFailure(call: Call<SourceResponse>, t: Throwable) {
-                    viewBinding.loadingIndicator.isVisible = false
-                    showErrorLayout(t.localizedMessage);
-                }
-            })
-    }
 
     private fun showLoadingLayout() {
         viewBinding.loadingIndicator.isVisible = true
@@ -136,5 +105,23 @@ class CategoryDetailsFragment : Fragment() {
             fragment.category = category
             return fragment
         }
+    }
+    fun subscribeToLiveData(){
+        viewModel.sourcesLiveData.observe(viewLifecycleOwner,{
+            bindSourcesInTabLayout(it)
+        })
+
+        viewModel.showLodingLayout.observe(viewLifecycleOwner,{
+            if (it)
+                showLoadingLayout()
+            else hidLoding()
+        })
+        viewModel.showErrorLayout.observe(viewLifecycleOwner,{
+            showErrorLayout(it)
+        })
+    }
+
+    private fun hidLoding() {
+        viewBinding.loadingIndicator.isVisible = false
     }
 }

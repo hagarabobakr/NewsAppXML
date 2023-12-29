@@ -1,14 +1,19 @@
-package com.example.newsapi.API.ui.newsFragment
+package com.example.newsapi.api.ui.newsFragment
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.newsapi.API.Model.newsResponse.News
+import com.example.newsapi.api.model.newsResponse.News
 import com.example.newsapi.databinding.ItemNewsBinding
 
 class NewsAdapter(var items :List<News?>?):RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
-    class ViewHolder(val viewbinding:ItemNewsBinding):RecyclerView.ViewHolder(viewbinding.root)
+    var onNewsClicked: OnItemNewsClick? = null
+    class ViewHolder(val viewbinding:ItemNewsBinding):RecyclerView.ViewHolder(viewbinding.root){
+        fun bind(news: News? ){
+            viewbinding.news = news
+            viewbinding.invalidateAll()
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val viewBinding =ItemNewsBinding.
@@ -18,12 +23,12 @@ class NewsAdapter(var items :List<News?>?):RecyclerView.Adapter<NewsAdapter.View
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items?.get(position)
-        holder.viewbinding.other.text = item?.author
-        holder.viewbinding.time.text = item?.publishedAt
-        holder.viewbinding.title.text = item?.title
-        Glide.with(holder.itemView)
-            .load(item?.urlToImage)
-            .into(holder.viewbinding.image)
+        holder.bind(item)
+        if (onNewsClicked != null){
+            holder.itemView.rootView.setOnClickListener {
+                onNewsClicked?.onItemNewsClicked(item)
+            }
+        }
     }
 
     override fun getItemCount(): Int {

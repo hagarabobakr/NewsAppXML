@@ -1,4 +1,4 @@
-package com.example.newsapi.API.ui.categories.recyclerView
+package com.example.newsapi.api.ui.categories.recyclerView
 
 import com.example.newsapi.R
 

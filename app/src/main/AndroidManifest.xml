@@ -15,7 +15,14 @@
         android:theme="@style/Theme.NEWSAPI"
         tools:targetApi="31">
         <activity
-            android:name=".API.ui.SplashScreen"
+            android:name=".api.ui.newsDetails.NewsDetailsActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".api.ui.SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,10 +35,8 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".API.ui.main.MainActivity"
+            android:name=".api.ui.main.MainActivity"
             android:exported="false">
-
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

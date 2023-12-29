@@ -1,11 +1,10 @@
-package com.example.newsapi.API.ui
+package com.example.newsapi.api.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.newsapi.API.ui.main.MainActivity
+import com.example.newsapi.api.ui.main.MainActivity
 import com.example.newsapi.R
-import com.example.newsapi.databinding.ActivityMainBinding
 import com.example.newsapi.databinding.ActivitySplashScreenBinding
 
 class SplashScreen : AppCompatActivity() {

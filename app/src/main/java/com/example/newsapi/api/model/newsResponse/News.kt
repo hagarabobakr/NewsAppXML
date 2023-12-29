@@ -1,6 +1,6 @@
-package com.example.newsapi.API.Model.newsResponse
+package com.example.newsapi.api.model.newsResponse
 
-import com.example.newsapi.API.Model.sourceResponse.Source
+import com.example.newsapi.api.model.sourceResponse.Source
 import com.google.gson.annotations.SerializedName
 
 data class News(
@@ -28,4 +28,4 @@ data class News(
 
 	@field:SerializedName("content")
 	val content: String? = null
-)
+):java.io.Serializable

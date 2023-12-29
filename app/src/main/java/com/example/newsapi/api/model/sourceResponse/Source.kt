@@ -1,4 +1,4 @@
-package com.example.newsapi.API.Model.sourceResponse
+package com.example.newsapi.api.model.sourceResponse
 
 import com.google.gson.annotations.SerializedName
 
@@ -24,4 +24,4 @@ data class Source(
 
 	@field:SerializedName("url")
 	val url: String? = null
-)
+):java.io.Serializable
